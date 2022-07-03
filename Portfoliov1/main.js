@@ -24,19 +24,19 @@ const torus = new THREE.Mesh(geometry, material);
 scene.add(torus)
 
 const pointLight = new THREE.PointLight(0xffffff)
-pointLight.position.set(5, 5, 5)
+pointLight.position.set(10, 1, 1)
 
 const ambientLight = new THREE.AmbientLight(0xffffff)
 scene.add(pointLight, ambientLight)
 
-const lightHelper = new THREE.PointLightHelper(pointLight)
-const gridHelper = new THREE.GridHelper(200,50);
-scene.add(lightHelper, gridHelper)
+// const lightHelper = new THREE.PointLightHelper(pointLight)
+// const gridHelper = new THREE.GridHelper(200,50);
+// scene.add(lightHelper, gridHelper)
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
 function addStar(){
-    const geometry = new THREE.SphereGeometry(0.25,24,24);
+    const geometry = new THREE.SphereGeometry(0.14,16,24);
     const material = new THREE.MeshStandardMaterial({color:0xffffff})
     const star = new THREE.Mesh(geometry, material);
 
@@ -50,6 +50,17 @@ Array(200).fill().forEach(addStar)
 
 const spaceTexture = new THREE.TextureLoader().load('Space_Planet_Wallpaper.jpeg')
 scene.background = spaceTexture;
+
+const marsTexture = new THREE.TextureLoader().load('mars-volcano.jpeg');
+
+const mars = new THREE.Mesh(
+    new THREE.SphereGeometry(3, 32, 32),
+    new THREE.MeshStandardMaterial({
+        map: marsTexture
+
+    })
+);
+scene.add(mars);
 
 function animate(){
     requestAnimationFrame(animate);
