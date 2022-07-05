@@ -10,21 +10,32 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 
 const renderer = new THREE.WebGLRenderer({
     canvas: document.querySelector('#bg'),
+    // renderer.setClearColorHex( 0xffffff, 1 )
 });
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
-camera.position.setZ(30);
+renderer.setClearColor(0xffffff, 1);
+// renderer.clear(op)
+camera.position.setZ(100);
 
 renderer.render(scene, camera);
 
-const geometry = new THREE.TorusGeometry(10, 3, 16, 100)
-const material = new THREE.MeshStandardMaterial({color: 0xFF6347});
+const geometry = new THREE.TorusGeometry(30, 1, 3, 100)
+const material = new THREE.MeshStandardMaterial({color: 0x110C2A}); //0xFF6347
 const torus = new THREE.Mesh(geometry, material);
 
-scene.add(torus)
+const geom = new THREE.TorusGeometry(30, 1, 3, 200)
+const materials = new THREE.MeshStandardMaterial({color: 0x110C2A}); //0xFF6347
+const toruses = new THREE.Mesh(geom, materials);
+
+const geo = new THREE.TorusGeometry(30, 1, 3, 200)
+const mater = new THREE.MeshStandardMaterial({color: 0x110C2A}); //0xFF6347
+const toru = new THREE.Mesh(geom, materials);
+
+scene.add(torus, toruses, toru)
 
 const pointLight = new THREE.PointLight(0xffffff)
-pointLight.position.set(10, 1, 1)
+pointLight.position.set(10, 10, 100)
 
 const ambientLight = new THREE.AmbientLight(0xffffff)
 scene.add(pointLight, ambientLight)
@@ -37,7 +48,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 
 function addStar(){
     const geometry = new THREE.SphereGeometry(0.14,16,24);
-    const material = new THREE.MeshStandardMaterial({color:0xffffff})
+    const material = new THREE.MeshStandardMaterial({color: 0xffffff})
     const star = new THREE.Mesh(geometry, material);
 
     const [x,y,z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread(100));
@@ -48,8 +59,8 @@ function addStar(){
 
 Array(200).fill().forEach(addStar)
 
-const spaceTexture = new THREE.TextureLoader().load('Space_Planet_Wallpaper.jpeg')
-scene.background = spaceTexture;
+// const spaceTexture = new THREE.TextureLoader().load('Space_Planet_Wallpaper.jpeg')
+// scene.background = spaceTexture;
 
 const marsTexture = new THREE.TextureLoader().load('mars-volcano.jpeg');
 
@@ -62,18 +73,48 @@ const mars = new THREE.Mesh(
 );
 scene.add(mars);
 
+// mars.position.z = 30;
+// mars.position.setX(-10);
+
+function moveCamera(){
+    const t = document.body.getBoundingClientRect().top;
+    mars.rotation.x += 0.05;
+    mars.rotation.y += 0.075;
+    mars.rotation.z += 0.05;
+
+    camera.position.z = t * -0.01;
+    camera.position.x = t * -0.0002;
+    camera.position.y = t * -0.0002;
+}
+document.body.onscroll = moveCamera
+
+
 function animate(){
     requestAnimationFrame(animate);
 
     torus.rotation.x += 0.01;
-    torus.rotation.y += 0.005;
+    torus.rotation.y += 0.003;
     torus.rotation.z += 0.01;
+
+    toruses.rotation.y += 0.01;
+    toruses.rotation.z += 0.003;
+    toruses.rotation.x += 0.01;
+
+    toru.rotation.z += 0.01;
+    toru.rotation.x += 0.003;
+    toru.rotation.y += 0.01;
+
+    mars.rotation.x += 0.001;
+    mars.rotation.y += 0.001;
+    mars.rotation.z += 0.001;
+
 
     controls.update();
 
     renderer.render(scene, camera);
 }
 animate()
+
 
 
     // , wireframe: true
